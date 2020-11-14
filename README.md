@@ -1,4 +1,4 @@
-# Url shortener Demo
+# Org dashboard
 
 Run: `./gradlew :server:run`
 
