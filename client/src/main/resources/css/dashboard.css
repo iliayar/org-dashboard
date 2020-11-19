@@ -27,14 +27,35 @@ body {
     margin: 0px;
 }
 
-.side-menu {
+.content.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: stretch;
+
     position: fixed;
     height: 100%;
-    display: none;
+    width: 100%;
+}
+
+.side-menu {
+    display: flex;
+    width: 0px;
     background-color: var(--maximum-red);
+    flex-grow: 0;
+    transition: width 0.5s ease-in-out;
+    overflow-x: hidden;
+    white-space: nowrap;
 }
 
 .side-menu.active {
-    display: block;
-    width: 30vh;
+    display: flex;
+    width: 20%;
+    flex-grow: 1;
+}
+.content .document {
+    flex-flow: 4;
+    width: 100%;
+    overflow-y: scroll;
 }
