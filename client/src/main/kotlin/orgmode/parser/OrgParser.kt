@@ -9,7 +9,7 @@ class OrgParser(src: Source) : AbstractParser<Org>(src) {
     var raw_markup: StringBuilder = StringBuilder()
 
     override fun parse(): Org {
-        var root: Section = Document()
+        var root: Section = OrgDocument()
         parseSection(root)
         return root
     }

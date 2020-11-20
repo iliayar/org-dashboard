@@ -22,7 +22,6 @@ class DashboardApp() {
 
 
 fun main() {
-
   document.addEventListener("DOMContentLoaded", {
                               val body = document.body as HTMLElement
                               body.append { application() }

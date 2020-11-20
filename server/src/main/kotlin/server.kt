@@ -1,3 +1,5 @@
+package org.dashboard.server
+
 import io.ktor.application.*
 import io.ktor.html.*
 import io.ktor.http.*
@@ -7,6 +9,9 @@ import io.ktor.routing.*
 import kotlinx.html.*
 import java.io.File
 import java.util.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
 
 fun Application.main() {
   routing {
@@ -46,6 +51,12 @@ fun Application.main() {
 
     static("/") {
       resources("/")
+    }
+
+    route("/api") {
+      post("/auth") {
+        call.respond(Json.encodeToString(User("name")))
+      }
     }
 
   }

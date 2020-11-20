@@ -170,7 +170,7 @@ open class Section(text: MarkupText, level: Int, entities: List<Org> = emptyList
     }
 }
 
-class Document(entities: List<Org> = emptyList()) : Section(Text(""), 0, entities) {
+class OrgDocument(entities: List<Org> = emptyList()) : Section(Text(""), 0, entities) {
 
     override fun toString(): String {
         return entities.fold("") { acc, e -> acc + e.toString() }
@@ -196,7 +196,7 @@ class Document(entities: List<Org> = emptyList()) : Section(Text(""), 0, entitie
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other !is Document) return false
+        if (other !is OrgDocument) return false
         return super.equals(other)
     }
 }

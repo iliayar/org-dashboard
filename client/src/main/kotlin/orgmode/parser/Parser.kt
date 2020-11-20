@@ -1,4 +1,6 @@
-package orgmode
+package orgmode.parser
+
+import orgmode.ParserException
 
 interface Parser<T> {
     fun parse(): T

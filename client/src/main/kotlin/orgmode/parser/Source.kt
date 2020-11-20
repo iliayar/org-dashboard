@@ -1,4 +1,4 @@
-package orgmode
+package orgmode.parser
 
 interface Source {
     fun isEof(): Boolean

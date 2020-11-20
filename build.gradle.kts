@@ -18,6 +18,7 @@ allprojects {
     }
 }
 
+
 tasks.register<Copy>("stage") {
     dependsOn("server:build")
 

@@ -1,4 +1,4 @@
 rootProject.name = "org-dashboard"
 
-include("client")
-include("server")
+include(":client")
+include(":server")

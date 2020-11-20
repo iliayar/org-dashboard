@@ -40,7 +40,7 @@ class RegexOrgParser(src: Source) : AbstractParser<Org>(src) {
 
     override fun parse(): Org {
 
-        var doc: Document = Document()
+        var doc: OrgDocument = OrgDocument()
 
         parseSection(doc)
 
