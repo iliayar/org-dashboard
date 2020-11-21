@@ -122,6 +122,18 @@ You can create table! \\
             classes = setOf("password")
           }
         }
+        div("login-form line submit") {
+          input() {
+            type = enumValueOf("button")
+            classes = setOf("submit login")
+            value = "Login"
+          }
+          input() {
+            type = enumValueOf("button")
+            classes = setOf("submit register")
+            value = "Register"
+          }
+        }
       }
     }.outerHTML
 

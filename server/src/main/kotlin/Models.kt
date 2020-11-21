@@ -2,10 +2,11 @@ package org.dashboard.server
 
 import kotlinx.serialization.*
 
+// :FIXME: Make separate class for Document content
 @Serializable
 class Document(
   val name: String,
-  val owner: User,
+  val user: String,
   val content: String,
   val shared: Boolean = false
 ) {
@@ -14,8 +15,15 @@ class Document(
 @Serializable
 class User(
   val name: String,
-  val authenticated: Boolean = false,
+  var authenticated: Boolean = false,
   val documents: List<Document> = listOf()
+) {
+}
+
+@Serializable
+class UserAuth(
+  val name: String,
+  val password: String,
 ) {
 }
 

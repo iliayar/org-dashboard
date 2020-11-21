@@ -28,16 +28,17 @@ body {
     margin: 0px;
 }
 
-.content.container {
+.app.container {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: stretch;
     align-content: stretch;
 
     position: fixed;
     height: calc(100% - 45px);
     width: 100%;
+    overflow-y: scroll;
 
     color: var(--lemon-meringue);
 }
@@ -57,17 +58,35 @@ body {
     width: 20%;
     flex-grow: 1;
 }
-.content .document {
-    flex-flow: 4;
+.app .content {
     width: 100%;
-    overflow-y: scroll;
 }
 
+.login-form {
+    display: flex;
+    justify-content: center;
+}
 .login-form.container {
     display: flex;
     flex-direction: column;
+    width: 50%;
 }
 
 .login-form.line {
+    display: flex;
     flex-direction: row;
+    justify-content: space-between;
+}
+.login-form.line.submit {
+    justify-content: center;
+}
+
+.login-form.line label {
+    width: 40%
+}
+.login-form.line input {
+    width: 60%
+}
+.login-form.container input[type="button"] {
+    width: 30%
 }

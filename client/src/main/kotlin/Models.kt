@@ -1,26 +1,33 @@
 package org.dashboard
 
-import orgmode.OrgDocument
 import kotlinx.serialization.*
 
+// :FIXME: Make separate class for Document content
 @Serializable
-class Document(
+data class Document(
   val name: String,
-  val owner: User,
-  val content: OrgDocument,
+  val user: String,
+  val content: String,
   val shared: Boolean = false
 ) {
 }
 
 @Serializable
-class User(
+data class User(
   val name: String,
-  val authenticated: Boolean = false,
+  var authenticated: Boolean = false,
   val documents: List<Document> = listOf()
 ) {
 }
 
 @Serializable
-class Error(
+data class UserAuth(
+  val name: String,
+  val password: String,
+) {
+}
+
+@Serializable
+data class Error(
   val msg: String
 )

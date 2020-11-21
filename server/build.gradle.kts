@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm")
     id("application")
     id("distribution")
-    kotlin("plugin.serialization") version "1.3.61"
+    kotlin("plugin.serialization") version "1.4.10"
 }
 
 val ktorVersion = project.property("ktor.version") as String
