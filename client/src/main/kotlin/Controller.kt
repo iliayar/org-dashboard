@@ -3,38 +3,47 @@ package org.dashboard
 import kotlinx.browser.window
 import crypto.createHash
 
+import orgmode.parser.RegexOrgParser
+import orgmode.parser.StringSource
+
 class Controller(private val model: Model, private val view: View) {
-  // TODO: Create methods
 
   init {
     view.bind.toggleMenu(::toggleMenu)
   }
 
-  fun setView(path: String?, hash: String?) {
-    model.getUser(::handleError) {
-      user ->
-        if(!user.authenticated) {
-          view.render.logedOut()
-          view.bind.login(::login)
-          view.bind.register(::register)
-        } else {
-          val doc = path?.split("/")?.elementAtOrElse(1, { _ -> "" }) ?: ""
-          updateDoc(doc);
-          updateFiles();
-        }
+  fun setViewCallback(user: User, path: String? , hash: String?) {
+    if(!user.authenticated) {
+      view.render.logedOut()
+      view.bind.login(::login)
+      view.bind.register(::register)
+    } else {
+      val doc = path?.split("/")?.elementAtOrElse(1, { _ -> "" }) ?: ""
+      updateDoc(doc)
+      updateDocuments()
+      view.render.displayUser(user)
+      view.bind.logout(::logout)
     }
   }
 
-  private fun updateDoc(docName: String) {
-    if(docName == "") {
+  fun setView(path: String?, hash: String?) {
+    model.getUser(::handleError) { user -> setViewCallback(user, path, hash) }
+  }
+
+  private fun updateDoc(name: String) {
+    if(name == "") {
       view.render.overview()
     } else {
-      view.render.doc(model.getDoc(docName))
+      openDocument(name)
     }
   }
 
-  private fun updateFiles() {
-    view.render.updateFiles(model.getFiles())
+  private fun updateDocuments() {
+    model.getDocuments(::handleError) {
+      docs ->
+        view.render.updateDocuments(docs)
+        view.bind.openDocument(::openDocument)
+    }
   }
 
   private fun toggleMenu() {
@@ -44,14 +53,37 @@ class Controller(private val model: Model, private val view: View) {
   private fun login(username: String, password: String) {
     model.authenticate(UserAuth(username, sha256(password)), ::handleError) {
       user ->
-        console.log(user.toString())
+        if(user.authenticated) {
+          setViewCallback(user, null, null)
+        }
     }
   }
   private fun register(username: String, password: String) {
-    window.alert("Register: " + username + " " + sha256(password))
+    model.register(UserAuth(username, sha256(password)), ::handleError) {
+      user ->
+        if(user.authenticated) {
+          setViewCallback(user, null, null)
+        }
+    }
   }
-  private fun handleError(e: Error) = view.bind.handleError(e)
 
+  private fun openDocument(name: String) {
+    model.getDocuments(::handleError) {
+      docs ->
+        for(doc in docs) {
+          if(doc.name == name) {
+            view.render.doc(RegexOrgParser(StringSource(doc.content)).parse().toHtml())
+          }
+        }
+    }
+  }
+
+  private fun logout() {
+    model.logout()
+    setView(null, null)
+  }
+
+  private fun handleError(e: Error) = view.bind.handleError(e)
   private fun sha256(d: String): String {
     return createHash("sha256").run {
       update(d)

@@ -72,16 +72,15 @@ fun Application.main() {
         }
       }
       post("/register") {
-        val user = call.receive<User>();
+        val auth = call.receive<UserAuth>();
         // :TODO: adding user
-        user.authenticated = true
-        call.respond(HttpStatusCode.OK, user);
+        call.respond(HttpStatusCode.OK, User(auth.name, true));
       }
-        get("/user/documents") {
-          val user = call.receive<User>()
+        get("/documents") {
+          val user = User("admin", true)
           // :TODO: Getting user's real documents
           if(user.authenticated) {
-            call.respond(HttpStatusCode.OK, listOf(Document("test", user.name, "* Test Document")))
+            call.respond(HttpStatusCode.OK, listOf(Document("test", user.name, "* Test Document"), Document("Another test", user.name, "* Another test Document")))
           } else {
             call.respond(HttpStatusCode(420, "Not authenticated"), Error("Not authenticated, cannot fetch documents"))
           }

@@ -7,12 +7,13 @@ import kotlinx.serialization.json.*
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.ParentNode
+import org.w3c.dom.*
 import org.w3c.fetch.*
 import kotlinx.browser.*
 import kotlin.js.json
 
 fun qs(selector: String, scope: Element? = null) = node(scope).querySelector(selector) as HTMLElement?
-
+fun qsa(selector: String, scope: Element? = null) = node(scope).querySelectorAll(selector).asList().map({ it as HTMLElement })
 
 private fun node(scope: Element?): ParentNode = scope ?: document
 

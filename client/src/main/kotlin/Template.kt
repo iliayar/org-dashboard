@@ -10,7 +10,6 @@ import orgmode.parser.StringSource
 
 
 class Template() {
-  // TODO: Templates
   fun loginTemplate(): String {
     return "Login form here"
   }
@@ -138,7 +137,26 @@ You can create table! \\
     }.outerHTML
 
   }
-  fun showFiles(files: List<String>): String {
-    return files.joinToString("</br>")
+  fun showDocuments(docs: List<Document>): String {
+    return document.create.div {
+      for(doc in docs) {
+        div("document-entry") {
+          attributes["name"] = doc.name
+          +doc.name
+        }
+      }
+    }.innerHTML
+  }
+  fun userInfo(user: User): String {
+    return document.create.div("user-info") {
+      label() {
+        +user.name
+      }
+      input() {
+        type = enumValueOf("button")
+        classes = setOf("submit logout")
+        value = "Log out"
+      }
+    }.innerHTML
   }
 }

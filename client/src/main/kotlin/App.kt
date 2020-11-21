@@ -15,7 +15,6 @@ class DashboardApp() {
     val view = View(template)
     val controller = Controller(model, view)
 
-    // val setView: (Event) -> Unit =
     window.addEventListener("load", { _ -> document.location?.run { controller.setView(pathname, hash) } });
   }
 }
@@ -34,7 +33,7 @@ fun TagConsumer<*>.application() {
     div("container") {
       i("fas fa-bars") { id = "menu-toggle-btn" }
       h1() { +"Org Dashboard" }
-      div()
+      div("user-info")
     }
   }
   div("app container") {
