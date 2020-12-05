@@ -42,6 +42,11 @@ fun TagConsumer<*>.application() {
       }
     }
     div("content") {
+      div("document") {
+      }
+      div("tools") {
+        +"Calendar or editor"
+      }
     }
   }
 }

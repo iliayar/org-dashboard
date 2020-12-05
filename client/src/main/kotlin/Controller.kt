@@ -19,9 +19,9 @@ class Controller(private val model: Model, private val view: View) {
       view.bind.register(::register)
     } else {
       val doc = path?.split("/")?.elementAtOrElse(1, { _ -> "" }) ?: ""
+      view.render.logedIn(user)
       updateDoc(doc)
       updateDocuments()
-      view.render.displayUser(user)
       view.bind.logout(::logout)
     }
   }
@@ -68,13 +68,8 @@ class Controller(private val model: Model, private val view: View) {
   }
 
   private fun openDocument(name: String) {
-    model.getDocuments(::handleError) {
-      docs ->
-        for(doc in docs) {
-          if(doc.name == name) {
-            view.render.doc(RegexOrgParser(StringSource(doc.content)).parse().toHtml())
-          }
-        }
+    model.getDocumentContent(name, ::handleError) {
+      content -> view.render.doc(content)
     }
   }
 

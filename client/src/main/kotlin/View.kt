@@ -27,6 +27,7 @@ open class View(private val template: Template) {
 
   inner class Authenticated() {
     val btn_logout = qs("input[type='button'].logout")!!
+    val document = qs(".content .document")!! as HTMLElement
   }
 
   inner class DocumentsView() {
@@ -35,11 +36,11 @@ open class View(private val template: Template) {
 
   inner class Renderer() {
     fun overview() {
-      content.innerHTML = template.overview()
+      auth!!.document.innerHTML = template.overview()
     }
 
     fun doc(doc_content: String) {
-      content.innerHTML = doc_content
+      auth!!.document.innerHTML = doc_content
     }
     fun toggleMenu() {
       if(side_menu.classList.contains("active")) {
@@ -58,8 +59,9 @@ open class View(private val template: Template) {
       user_info.innerHTML = "Not authenticated"
       loginView = LoginView()
     }
-    fun displayUser(user: User) {
+    fun logedIn(user: User) {
       user_info.innerHTML = template.userInfo(user)
+      content.innerHTML = template.authContent()
       auth = Authenticated()
     }
   }

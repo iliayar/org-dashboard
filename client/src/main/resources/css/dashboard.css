@@ -1,5 +1,5 @@
 header {
-    background-color: var(--maximum-yellow-red);
+    background-color: var(--color8);
     height: 45px;
 }
 
@@ -13,7 +13,7 @@ header .container {
 
 header  h1 {
     text-align: center;
-    color: var(--prussian-blue);
+    color: var(--color1);
     margin: 0px;
     align-self: center;
 }
@@ -24,7 +24,7 @@ header  i {
 }
 
 body {
-    background-color: var(--prussian-blue);
+    background-color: var(--background);
     margin: 0px;
 }
 
@@ -38,19 +38,26 @@ body {
     position: fixed;
     height: calc(100% - 45px);
     width: 100%;
-    overflow-y: scroll;
 
-    color: var(--lemon-meringue);
+    color: var(--foreground);
+}
+
+.content .document {
+    margin: 15px 5% 15px 5%;
+    overflow-y: scroll;
+    height: calc(100% - 45px);
 }
 
 .side-menu {
     display: flex;
     width: 0px;
-    background-color: var(--maximum-red);
+    background-color: var(--color8);
     flex-grow: 0;
     transition: width 0.5s ease-in-out;
     overflow-x: hidden;
     white-space: nowrap;
+
+    border-right: solid 2px var(--color4);
 }
 
 .side-menu.active {
@@ -58,13 +65,29 @@ body {
     width: 20%;
     flex-grow: 1;
 }
+.side-menu .files {
+    width: 90%;
+}
+.files .document-entry {
+    width: 100%;
+    padding: 3px;
+    margin: 5px;
+}
+.files .document-entry:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
 .app .content {
     width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 .login-form {
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 .login-form.container {
     display: flex;
@@ -89,4 +112,20 @@ body {
 }
 .login-form.container input[type="button"] {
     width: 30%
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color4);
+  border-radius: 10px;
 }

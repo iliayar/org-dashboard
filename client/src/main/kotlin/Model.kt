@@ -9,6 +9,9 @@ import kotlinx.browser.window
 import kotlinx.coroutines.*
 import kotlinx.browser.localStorage
 
+import orgmode.parser.RegexOrgParser
+import orgmode.parser.StringSource
+
 class Model() {
 
   fun getDoc(name: String): String {
@@ -55,6 +58,7 @@ Test content
     val docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
     if(docs != null) {
       cb(docs)
+      return
     }
     parseResult("/api/documents", "GET", ::decodeDocuments, error_cb) {
       docs: List<Document> ->
@@ -65,6 +69,22 @@ Test content
 
   fun logout() {
     localStorage.removeItem("user")
+  }
+
+  fun getDocumentContent(name: String, error_cb: (Error) -> Unit, cb: (String) -> Unit) {
+    getDocuments(error_cb) {
+      docs ->
+        var found: Boolean = false
+        for(doc in docs) {
+          if(doc.name == name) {
+            found = true
+            cb(RegexOrgParser(StringSource(doc.content)).parse().toHtml())
+          }
+        }
+        if(!found) {
+          error_cb(Error("Document not found"))
+        }
+    }
   }
 
   private fun decodeUser(s: String): User = Json.decodeFromString<User>(s)

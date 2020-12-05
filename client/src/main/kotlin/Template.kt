@@ -135,7 +135,6 @@ You can create table! \\
         }
       }
     }.outerHTML
-
   }
   fun showDocuments(docs: List<Document>): String {
     return document.create.div {
@@ -156,6 +155,15 @@ You can create table! \\
         type = enumValueOf("button")
         classes = setOf("submit logout")
         value = "Log out"
+      }
+    }.innerHTML
+  }
+  fun authContent(): String {
+    return document.create.div() {
+      div("document") {
+      }
+      div("tools") {
+        +"Calendar or editor"
       }
     }.innerHTML
   }
