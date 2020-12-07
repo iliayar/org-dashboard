@@ -163,7 +163,9 @@ You can create table! \\
       div("document") {
       }
       div("tools") {
-        +"Calendar or editor"
+        div("org-editor") {
+          attributes["contenteditable"] = ""
+        }
       }
     }.innerHTML
   }

@@ -23,6 +23,7 @@ class Controller(private val model: Model, private val view: View) {
       updateDoc(doc)
       updateDocuments()
       view.bind.logout(::logout)
+      view.bind.orgEditorEdit(::orgEdit)
     }
   }
 
@@ -76,6 +77,10 @@ class Controller(private val model: Model, private val view: View) {
   private fun logout() {
     model.logout()
     setView(null, null)
+  }
+
+  private fun orgEdit(content: String) {
+    view.render.doc(RegexOrgParser(StringSource(content)).parse().toHtml())
   }
 
   private fun handleError(e: Error) = view.bind.handleError(e)

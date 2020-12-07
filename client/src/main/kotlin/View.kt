@@ -28,6 +28,7 @@ open class View(private val template: Template) {
   inner class Authenticated() {
     val btn_logout = qs("input[type='button'].logout")!!
     val document = qs(".content .document")!! as HTMLElement
+    val editor = qs(".org-editor")!! as HTMLElement
   }
 
   inner class DocumentsView() {
@@ -86,6 +87,9 @@ open class View(private val template: Template) {
       for(doc in docs!!.list) {
         doc.addEventListener("click", {e -> handler((e.target as HTMLElement).attributes["name"]!!.value)})
       }
+    }
+    fun orgEditorEdit(handler: (String) -> Unit) {
+      auth!!.editor.addEventListener("input", {_ -> handler(auth!!.editor.innerText) })
     }
   }
 }
