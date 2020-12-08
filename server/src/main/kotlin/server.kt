@@ -76,7 +76,7 @@ fun Application.main() {
         // :TODO: adding user
         call.respond(HttpStatusCode.OK, User(auth.name, true));
       }
-        get("/documents") {
+        get("/document/list") {
           val user = User("admin", true)
           // :TODO: Getting user's real documents
           if(user.authenticated) {
@@ -89,6 +89,14 @@ fun Application.main() {
           // :TODO: Getting current user or Error in case not authenticated
           call.respond(User("admin", false));
         }
+        get("/document") {
+          // :TODO: Getting document content
+        }
+      post("/document") {
+        // :TODO: Saving document
+        val doc = call.receive<Document>();
+        println(doc.content);
+      }
     }
   }
 }

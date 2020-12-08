@@ -5,6 +5,7 @@ import crypto.createHash
 
 import orgmode.parser.RegexOrgParser
 import orgmode.parser.StringSource
+import orgmode.OrgDocument
 
 class Controller(private val model: Model, private val view: View) {
 
@@ -69,8 +70,8 @@ class Controller(private val model: Model, private val view: View) {
   }
 
   private fun openDocument(name: String) {
-    model.getDocumentContent(name, ::handleError) {
-      content -> view.render.doc(content)
+    model.getDocument(name, ::handleError) {
+      doc -> view.render.updateDocument(doc)
     }
   }
 
@@ -80,7 +81,7 @@ class Controller(private val model: Model, private val view: View) {
   }
 
   private fun orgEdit(content: String) {
-    view.render.doc(RegexOrgParser(StringSource(content)).parse().toHtml())
+    view.render.editDocument(RegexOrgParser(StringSource(content)).parse().toHtml())
   }
 
   private fun handleError(e: Error) = view.bind.handleError(e)

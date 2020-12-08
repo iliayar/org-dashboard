@@ -4,6 +4,8 @@ import org.w3c.dom.*
 import kotlinx.browser.document
 import kotlinx.browser.window
 
+import orgmode.OrgDocument
+
 open class View(private val template: Template) {
   val render = Renderer()
   val bind = Binder()
@@ -40,8 +42,12 @@ open class View(private val template: Template) {
       auth!!.document.innerHTML = template.overview()
     }
 
-    fun doc(doc_content: String) {
-      auth!!.document.innerHTML = doc_content
+    fun updateDocument(doc: OrgDocument) {
+      auth!!.document.innerHTML = doc.toHtml()
+      auth!!.editor.innerHTML = doc.toString()
+    }
+    fun editDocument(content: String) {
+      auth!!.document.innerHTML = content
     }
     fun toggleMenu() {
       if(side_menu.classList.contains("active")) {

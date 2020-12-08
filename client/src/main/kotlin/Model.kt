@@ -11,6 +11,7 @@ import kotlinx.browser.localStorage
 
 import orgmode.parser.RegexOrgParser
 import orgmode.parser.StringSource
+import orgmode.OrgDocument
 
 class Model() {
 
@@ -60,7 +61,7 @@ Test content
       cb(docs)
       return
     }
-    parseResult("/api/documents", "GET", ::decodeDocuments, error_cb) {
+    parseResult("/api/document/list", "GET", ::decodeDocuments, error_cb) {
       docs: List<Document> ->
         localStorage["docs"] = Json.encodeToString(docs)
       cb(docs)
@@ -71,14 +72,14 @@ Test content
     localStorage.removeItem("user")
   }
 
-  fun getDocumentContent(name: String, error_cb: (Error) -> Unit, cb: (String) -> Unit) {
+  fun getDocument(name: String, error_cb: (Error) -> Unit, cb: (OrgDocument) -> Unit) {
     getDocuments(error_cb) {
       docs ->
         var found: Boolean = false
         for(doc in docs) {
           if(doc.name == name) {
             found = true
-            cb(RegexOrgParser(StringSource(doc.content)).parse().toHtml())
+            cb(RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument)
           }
         }
         if(!found) {
@@ -87,8 +88,16 @@ Test content
     }
   }
 
+  fun saveDocument(doc: Document, error_cb: (Error) -> Unit, cb: () -> Unit) {
+    sendAndParseResult("/api/document", "POST", doc, {s -> s}, ::encodeDocument, error_cb) {
+      cb()
+    }
+  }
+
   private fun decodeUser(s: String): User = Json.decodeFromString<User>(s)
   private fun decodeDocuments(s: String): List<Document> = Json.decodeFromString<List<Document>>(s)
   private fun encodeUser(u: User): String = Json.encodeToString(u)
   private fun encodeUserAuth(u: UserAuth): String = Json.encodeToString(u)
+  private fun encodeDocument(d: Document): String = Json.encodeToString(d)
+  private fun decodeDocument(s: String): Document = Json.decodeFromString<Document>(s);
 }
