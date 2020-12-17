@@ -31,6 +31,7 @@ open class View(private val template: Template) {
     val btn_logout = qs("input[type='button'].logout")!!
     val document = qs(".content .document")!! as HTMLElement
     val editor = qs(".org-editor")!! as HTMLElement
+    val calendar = qs(".calendar")!! as HTMLElement
   }
 
   inner class DocumentsView() {
@@ -39,12 +40,14 @@ open class View(private val template: Template) {
 
   inner class Renderer() {
     fun overview() {
-      auth!!.document.innerHTML = template.overview()
+       updateDocument(template.overview())
     }
 
     fun updateDocument(doc: OrgDocument) {
       auth!!.document.innerHTML = doc.toHtml()
       auth!!.editor.innerHTML = doc.toString()
+      auth!!.calendar.innerHTML = template.calendar(doc.getPlanning())
+      window.alert(doc.getPlanning().toString())
     }
     fun editDocument(content: String) {
       auth!!.document.innerHTML = content

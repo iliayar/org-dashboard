@@ -168,6 +168,20 @@ open class Section(text: MarkupText, level: Int, entities: List<Org> = emptyList
         }
         return state == other.state && other.text == text && other.level == level && super.equals(other)
     }
+
+    fun getPlanning(): List<Pair<MarkupText, Planning>> {
+      var res: List<Pair<MarkupText, Planning>> = listOf()
+      for(p in planning) {
+        res += Pair(text, p)
+      }
+      for(e in entities) {
+        if(e is Section) {
+          res += e.getPlanning()
+        }
+      }
+      return res
+    }
+
 }
 
 class OrgDocument(entities: List<Org> = emptyList()) : Section(Text(""), 0, entities) {

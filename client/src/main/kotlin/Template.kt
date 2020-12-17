@@ -7,13 +7,16 @@ import kotlinx.html.dom.*
 
 import orgmode.parser.RegexOrgParser
 import orgmode.parser.StringSource
+import orgmode.MarkupText
+import orgmode.Planning
+import orgmode.OrgDocument
 
 
 class Template() {
   fun loginTemplate(): String {
     return "Login form here"
   }
-  fun overview(): String {
+  fun overview(): OrgDocument {
     return RegexOrgParser(StringSource("""
 * Org Dashboard
 
@@ -98,7 +101,7 @@ You can create table! \\
 |------+-------------|
 | value 1 | value 2 |
 | 2 | 3 |
-""")).parse().toHtml()
+""")).parse() as OrgDocument
   }
   fun logedOut(): String {
     return document.create.div("login-form") {
@@ -165,6 +168,22 @@ You can create table! \\
       div("tools") {
         div("org-editor") {
           attributes["contenteditable"] = ""
+          attributes["hidden"] = ""
+        }
+        div("calendar") {
+
+        }
+      }
+    }.innerHTML
+  }
+  fun calendar(entries: List<Pair<MarkupText, Planning>>): String {
+    return document.create.div() {
+      for((text, date) in entries) {
+        div() {
+          unsafe {
+            +text.toHtml()
+            +date.toHtml()
+          }
         }
       }
     }.innerHTML

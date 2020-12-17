@@ -123,6 +123,12 @@ body {
     height: 80%;
     margin: 10%;
 }
+.calendar {
+    width: 100%;
+    overflow-y: scroll;
+    height: 80%;
+    margin: 10%;
+}
 
 /* width */
 ::-webkit-scrollbar {

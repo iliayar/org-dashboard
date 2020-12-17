@@ -21,8 +21,8 @@ class Controller(private val model: Model, private val view: View) {
     } else {
       val doc = path?.split("/")?.elementAtOrElse(1, { _ -> "" }) ?: ""
       view.render.logedIn(user)
-      updateDoc(doc)
       updateDocuments()
+      updateDoc(doc)
       view.bind.logout(::logout)
       view.bind.orgEditorEdit(::orgEdit)
     }
