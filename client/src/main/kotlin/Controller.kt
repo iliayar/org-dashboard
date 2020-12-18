@@ -25,6 +25,8 @@ class Controller(private val model: Model, private val view: View) {
       updateDoc(doc)
       view.bind.logout(::logout)
       view.bind.orgEditorEdit(::orgEdit)
+      view.bind.enableCalendar(view.render::enableCalendar)
+      view.bind.enableEditor(view.render::enableEditor)
     }
   }
 
@@ -81,7 +83,7 @@ class Controller(private val model: Model, private val view: View) {
   }
 
   private fun orgEdit(content: String) {
-    view.render.editDocument(RegexOrgParser(StringSource(content)).parse().toHtml())
+    view.render.editDocument(RegexOrgParser(StringSource(content)).parse() as OrgDocument)
   }
 
   private fun handleError(e: Error) = view.bind.handleError(e)

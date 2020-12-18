@@ -350,6 +350,10 @@ class RegexOrgParser(src: Source) : AbstractParser<Org>(src) {
     }
 
     val regexToMarkup: Map<Regex, (MatchResult) -> List<MarkupText>> = mapOf(
+        codeRegex to {
+            match ->
+            parseNextMarkup(match, 1, Code(match.groups[4]!!.value), 6)
+        },
         linkRegex to {
             match ->
             var link: Link
@@ -368,10 +372,6 @@ class RegexOrgParser(src: Source) : AbstractParser<Org>(src) {
         emphasisRegex to generalMarkup(::Emphasis),
         strikeoutRegex to generalMarkup(::Strikeout),
         underlineRegex to generalMarkup(::Underline),
-        codeRegex to {
-            match ->
-            parseNextMarkup(match, 1, Code(match.groups[4]!!.value), 6)
-        },
         textRegex to {
             match ->
             var res: List<MarkupText> = listOf()

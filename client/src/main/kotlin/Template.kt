@@ -166,12 +166,19 @@ You can create table! \\
       div("document") {
       }
       div("tools") {
-        div("org-editor") {
-          attributes["contenteditable"] = ""
-          attributes["hidden"] = ""
+        div("tools-btns") {
+          div("tool-btn-calendar tool-btn") {
+            +"Agenda"
+          }
+          div("tool-btn-editor tool-btn") {
+            +"Editor"
+          }
         }
         div("calendar") {
 
+        }
+        div("editor tool-hidden") {
+          attributes["contenteditable"] = ""
         }
       }
     }.innerHTML
@@ -182,6 +189,7 @@ You can create table! \\
         div() {
           unsafe {
             +text.toHtml()
+            +" "
             +date.toHtml()
           }
         }

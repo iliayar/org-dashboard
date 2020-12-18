@@ -61,6 +61,6 @@ class CodeBlock(lines: List<String> = listOf()) : Block(lines) {
     lines.foldIndexed("") {i, acc, e -> acc + (if (i != 0) ", " else "") + '"' + e + '"'}
     }]}"""
     override fun toHtml(): String = """<pre><code>${lines.fold("") {acc, e -> acc + e + "\n"}}</code></pre>"""
-    override fun toString(): String = """#+BEGIN_SRC${lines.fold("") {acc, e -> acc + "\n" + e}}#+END_SRC"""
+    override fun toString(): String = """#+BEGIN_SRC${lines.fold("") {acc, e -> acc + "\n" + e}}${'\n'}#+END_SRC${'\n'}"""
     override fun toMarkdown(): String = """```${'\n'}${lines.fold("") {acc, e -> acc + e + '\n'}}```"""
 }

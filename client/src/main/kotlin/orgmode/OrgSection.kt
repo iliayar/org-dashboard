@@ -2,43 +2,43 @@ package orgmode
 
 enum class STATE {
     TODO {
-        override fun getColor(): String = "orange"
+        override fun getClass(): String = "todo"
     },
     FIXME {
-        override fun getColor(): String = "red"
+        override fun getClass(): String = "fixme"
     },
     DONE {
-        override fun getColor(): String = "green"
+        override fun getClass(): String = "done"
     },
     NONE {
-        override fun getColor(): String = throw OrgException("Trying get color of NONE state")
+        override fun getClass(): String = throw OrgException("Trying get color of NONE state")
     };
     fun toHtml(): String {
-        return """<code style="color:${getColor()}">${toString()}</code>"""
+        return """<code class="state-${getClass()}">${toString()}</code>"""
     }
 
-    abstract fun getColor(): String
+    abstract fun getClass(): String
 
 }
 
 enum class PLANNING_TYPE {
     DEADLINE {
-        override fun getHtmlColor(): String = "red"
+        override fun getClass(): String = "deadline"
     },
     SCHEDULED{
-        override fun getHtmlColor(): String = "orange"
+        override fun getClass(): String = "scheduled"
     },
     CLOSED{
-        override fun getHtmlColor(): String = "gray"
+        override fun getClass(): String = "closed"
     };
 
-    abstract fun getHtmlColor(): String
+    abstract fun getClass(): String
 }
 
 class Planning(var type: PLANNING_TYPE, var timestamp: Timestamp) {
 
     fun toJson(): String = """{ "type": "$type", "timestamp": ${timestamp.toJson()}}"""
-    fun toHtml(): String = """<code style="background:${type.getHtmlColor()}">$timestamp</code>"""
+    fun toHtml(): String = """<code class="planning-${type.getClass()}">$timestamp</code>"""
 
     override fun equals(other: Any?): Boolean {
         if(other !is Planning) return false

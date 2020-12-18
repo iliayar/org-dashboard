@@ -45,7 +45,20 @@ fun TagConsumer<*>.application() {
       div("document") {
       }
       div("tools") {
-        +"Calendar or editor"
+        div("tools-btns") {
+          div("tool-btn-calendar") {
+            +"Agenda"
+          }
+          div("tool-btn-editor") {
+            +"Editor"
+          }
+        }
+        div("calendar") {
+
+        }
+        div("editor") {
+
+        }
       }
     }
   }

@@ -43,9 +43,10 @@ body {
 }
 
 .content .document {
-    margin: 15px 5% 15px 5%;
+    margin: 15px 1% 15px 5%;
     overflow-y: scroll;
     height: calc(100% - 45px);
+    flex-grow: 3;
 }
 
 .side-menu {
@@ -116,18 +117,57 @@ body {
 
 .tools {
     width: 30%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
 }
-.org-editor {
+
+.tool-hidden {
+    display: none;
+}
+
+.tools-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
+    width: 100%;
+}
+
+.tool-btn {
+    flex-grow: 1;
+    border: 1px solid var(--foreground);
+}
+
+.tool-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.tools .editor {
+    overflow-y: scroll;
+    height: 80%;
+    margin: 10%;
+    white-space: pre;
+}
+.tools .calendar {
     width: 100%;
     overflow-y: scroll;
     height: 80%;
     margin: 10%;
 }
-.calendar {
-    width: 100%;
-    overflow-y: scroll;
-    height: 80%;
-    margin: 10%;
+
+.planning-scheduled {
+    background-color: var(--color3);
+    color: var(--background);
+}
+.planning-deadline {
+    background-color: var(--color1);
+    color: var(--background);
+}
+.planning-closed {
+    background-color: var(--color2);
+    color: var(--background);
 }
 
 /* width */

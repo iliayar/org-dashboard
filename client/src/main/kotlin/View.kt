@@ -30,8 +30,10 @@ open class View(private val template: Template) {
   inner class Authenticated() {
     val btn_logout = qs("input[type='button'].logout")!!
     val document = qs(".content .document")!! as HTMLElement
-    val editor = qs(".org-editor")!! as HTMLElement
-    val calendar = qs(".calendar")!! as HTMLElement
+    val editor = qs(".tools .editor")!! as HTMLElement
+    val calendar = qs(".tools .calendar")!! as HTMLElement
+    val editor_btn = qs(".tool-btn-editor")!! as HTMLElement
+    val calendar_btn = qs(".tool-btn-calendar")!! as HTMLElement
   }
 
   inner class DocumentsView() {
@@ -45,18 +47,30 @@ open class View(private val template: Template) {
 
     fun updateDocument(doc: OrgDocument) {
       auth!!.document.innerHTML = doc.toHtml()
-      auth!!.editor.innerHTML = doc.toString()
+      auth!!.editor.textContent = doc.toString()
       auth!!.calendar.innerHTML = template.calendar(doc.getPlanning())
-      window.alert(doc.getPlanning().toString())
     }
-    fun editDocument(content: String) {
-      auth!!.document.innerHTML = content
+    fun editDocument(doc: OrgDocument) {
+      auth!!.document.innerHTML = doc.toHtml()
+      auth!!.calendar.innerHTML = template.calendar(doc.getPlanning())
     }
     fun toggleMenu() {
       if(side_menu.classList.contains("active")) {
         side_menu.classList.remove("active");
       } else {
         side_menu.classList.add("active");
+      }
+    }
+    fun enableCalendar() {
+      if(auth!!.calendar.classList.contains("tool-hidden")) {
+        auth!!.calendar.classList.remove("tool-hidden")
+        auth!!.editor.classList.add("tool-hidden")
+      }
+    }
+    fun enableEditor() {
+      if(auth!!.editor.classList.contains("tool-hidden")) {
+        auth!!.editor.classList.remove("tool-hidden")
+        auth!!.calendar.classList.add("tool-hidden")
       }
     }
     fun updateDocuments(documents: List<Document>) {
@@ -79,6 +93,12 @@ open class View(private val template: Template) {
   inner class Binder {
     fun toggleMenu(handler: () -> Unit) {
       menu_toggle.addEventListener("click", { _ -> handler() })
+    }
+    fun enableEditor(handler: () -> Unit) {
+      auth!!.editor_btn.addEventListener("click", { _ -> handler()})
+    }
+    fun enableCalendar(handler: () -> Unit) {
+      auth!!.calendar_btn.addEventListener("click", { _ -> handler()})
     }
     fun handleError(e: Error) {
       window.alert(e.msg)
