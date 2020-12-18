@@ -161,6 +161,22 @@ body {
     background-color: var(--color3);
     color: var(--background);
 }
+.save-btn {
+    margin-left: 15px;
+    padding: 5px;
+}
+.menu-toggle-btn {
+    padding: 5px;
+}
+.menu-toggle-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+.save-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
 .planning-deadline {
     background-color: var(--color1);
     color: var(--background);
@@ -168,6 +184,12 @@ body {
 .planning-closed {
     background-color: var(--color2);
     color: var(--background);
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /* width */

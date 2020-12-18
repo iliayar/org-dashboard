@@ -72,14 +72,14 @@ Test content
     localStorage.removeItem("user")
   }
 
-  fun getDocument(name: String, error_cb: (Error) -> Unit, cb: (OrgDocument) -> Unit) {
+  fun getDocument(name: String, error_cb: (Error) -> Unit, cb: (Document) -> Unit) {
     getDocuments(error_cb) {
       docs ->
         var found: Boolean = false
         for(doc in docs) {
           if(doc.name == name) {
             found = true
-            cb(RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument)
+            cb(doc)
           }
         }
         if(!found) {

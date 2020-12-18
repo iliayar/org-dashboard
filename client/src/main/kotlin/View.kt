@@ -14,11 +14,12 @@ open class View(private val template: Template) {
   var docs: DocumentsView? = null
 
   private val body = document.body as HTMLElement
-  private val menu_toggle = qs("#menu-toggle-btn")!!
+  private val menu_toggle = qs(".menu-toggle-btn")!!
   private val side_menu = qs(".side-menu")!!
   private val content = qs(".content")!!
   private val files_list = qs(".files", side_menu)!!
   private val user_info = qs("header .user-info")!!
+  private val save = qs(".save-btn")!!
 
   inner class LoginView() {
     val btn_login = qs("input[type='button'].login")!!
@@ -91,6 +92,9 @@ open class View(private val template: Template) {
   }
 
   inner class Binder {
+    fun save(handler: () -> Unit) {
+      save.addEventListener("click", { _ -> handler()})
+    }
     fun toggleMenu(handler: () -> Unit) {
       menu_toggle.addEventListener("click", { _ -> handler() })
     }

@@ -9,8 +9,11 @@ import orgmode.OrgDocument
 
 class Controller(private val model: Model, private val view: View) {
 
+  var current_doc: Document? = null
+
   init {
     view.bind.toggleMenu(::toggleMenu)
+    view.bind.save(::saveDocument)
   }
 
   fun setViewCallback(user: User, path: String? , hash: String?) {
@@ -73,7 +76,14 @@ class Controller(private val model: Model, private val view: View) {
 
   private fun openDocument(name: String) {
     model.getDocument(name, ::handleError) {
-      doc -> view.render.updateDocument(doc)
+      doc -> view.render.updateDocument(RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument)
+      current_doc = doc
+    }
+  }
+
+  private fun saveDocument() {
+    if(current_doc != null) {
+      model.saveDocument(current_doc!!, ::handleError) { }
     }
   }
 
@@ -83,6 +93,9 @@ class Controller(private val model: Model, private val view: View) {
   }
 
   private fun orgEdit(content: String) {
+    if(current_doc != null) {
+      current_doc!!.content = content
+    }
     view.render.editDocument(RegexOrgParser(StringSource(content)).parse() as OrgDocument)
   }
 

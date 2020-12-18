@@ -31,7 +31,13 @@ fun main() {
 fun TagConsumer<*>.application() {
   header {
     div("container") {
-      i("fas fa-bars") { id = "menu-toggle-btn" }
+      div("controls") {
+        i("fas fa-bars menu-toggle-btn")
+        div("save-btn") {
+          i("fas fa-save")
+          +" Save"
+        }
+      }
       h1() { +"Org Dashboard" }
       div("user-info")
     }

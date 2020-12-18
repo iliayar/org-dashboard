@@ -7,7 +7,7 @@ import kotlinx.serialization.*
 data class Document(
   val name: String,
   val user: String,
-  val content: String,
+  var content: String,
   val shared: Boolean = false
 ) {
 }

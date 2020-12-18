@@ -96,6 +96,7 @@ fun Application.main() {
         // :TODO: Saving document
         val doc = call.receive<Document>();
         println(doc.content);
+        call.respond(HttpStatusCode.OK);
       }
     }
   }
