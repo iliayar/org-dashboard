@@ -46,7 +46,9 @@ class Planning(var type: PLANNING_TYPE, var timestamp: Timestamp) {
     }
 }
 
-class Property(var name: String, var plus: Boolean, var value: String?)
+class Property(var name: String, var plus: Boolean, var value: String?) {
+  override fun toString(): String = "#+$name: $value"
+}
 
 class Timestamp(var active: Boolean,
                 var year: Int,
@@ -122,6 +124,7 @@ open class Section(text: MarkupText, level: Int, entities: List<Org> = emptyList
     var text: MarkupText = text
     var planning: List<Planning> = listOf()
     var properties: List<Property> = listOf()
+    var title: String? = null
 
     fun plan(planning: Planning) {
         this.planning += planning
@@ -129,9 +132,12 @@ open class Section(text: MarkupText, level: Int, entities: List<Org> = emptyList
 
     fun addProperty(property: Property) {
         this.properties += property
+        if(property.name == "TITLE") {
+          this.title = property.value
+        }
     }
 
-    override fun toString(): String = "\n${"*".repeat(level)} ${text.toString()}\n${super.toString()}"
+    override fun toString(): String = "\n${"*".repeat(level)} ${text.toString()}\n${properties.joinToString("\n")}\n${super.toString()}"
     override fun toMarkdown(): String = "\n${"#".repeat(level)} ${text.toMarkdown()}\n${super.toMarkdown()}"
 
     override fun toJson(): String {
@@ -186,9 +192,6 @@ open class Section(text: MarkupText, level: Int, entities: List<Org> = emptyList
 
 class OrgDocument(entities: List<Org> = emptyList()) : Section(Text(""), 0, entities) {
 
-    override fun toString(): String {
-        return entities.fold("") { acc, e -> acc + e.toString() }
-    }
     override fun toMarkdown(): String {
         return entities.fold("") { acc, e -> acc + e.toMarkdown() }
     }

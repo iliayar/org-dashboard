@@ -45,6 +45,8 @@ class OrgParser(src: Source) : AbstractParser<Org>(src) {
                         section = parseSection(element)
                     }
                 } else return element
+            } else if(element is Keyword && element.key == "TITLE") {
+              root.title = element.value
             } else if (element is ListEntry) {
                 if (!lines.isEmpty()) {
                     root.add(Paragraph(lines))

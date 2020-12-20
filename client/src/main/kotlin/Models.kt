@@ -5,7 +5,7 @@ import kotlinx.serialization.*
 // :FIXME: Make separate class for Document content
 @Serializable
 data class Document(
-  val name: String,
+  var name: String,
   val user: String,
   var content: String,
   val shared: Boolean = false

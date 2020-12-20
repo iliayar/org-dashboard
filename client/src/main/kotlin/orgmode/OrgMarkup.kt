@@ -260,7 +260,7 @@ class Emphasis(entities: List<MarkupText> = emptyList(), other: MarkupText? = nu
 
 class Keyword(var key: String, var value: String) : MarkupText(listOf(), null) {
     override fun getMarkupType(): MARKUP_TYPE = MARKUP_TYPE.KEYWORD
-    override fun toString(): String = "#+$key: $value"
+    override fun toString(): String = "#+$key: $value\n"
     override fun toMarkdown(): String = ""
     override fun toJson(): String = """{"type": "keyword", "key": "$key", "value": "$value"}"""
     override fun toHtml(): String = ""
@@ -268,6 +268,7 @@ class Keyword(var key: String, var value: String) : MarkupText(listOf(), null) {
         if (other !is Keyword) return false
         return key == other.key && value == other.value
     }
+    override fun isEmpty(): Boolean = false
 }
 
 class LineBreak() : Text("\n") {

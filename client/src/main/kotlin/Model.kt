@@ -77,7 +77,7 @@ Test content
       docs ->
         var found: Boolean = false
         for(doc in docs) {
-          if(doc.name == name) {
+          if(doc.name == name) { // :FIXME: Search by id
             found = true
             cb(doc)
           }
@@ -89,6 +89,23 @@ Test content
   }
 
   fun saveDocument(doc: Document, error_cb: (Error) -> Unit, cb: () -> Unit) {
+    var docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
+    if(docs != null) {
+      var found: Boolean = false
+      for(d in docs) {
+        if(d.name == doc.name) {
+          val org_doc: OrgDocument = RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument
+          d.content = doc.content
+          d.name = org_doc.title ?: "Untitled"
+          found = true
+          break
+        }
+      }
+      if(!found) {
+        docs += doc
+      }
+      localStorage["docs"] = Json.encodeToString(docs)
+    }
     sendAndParseResult("/api/document", "POST", doc, {s -> s}, ::encodeDocument, error_cb) {
       cb()
     }

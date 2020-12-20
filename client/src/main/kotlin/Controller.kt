@@ -14,6 +14,7 @@ class Controller(private val model: Model, private val view: View) {
   init {
     view.bind.toggleMenu(::toggleMenu)
     view.bind.save(::saveDocument)
+    view.bind.new(::newDocument)
   }
 
   fun setViewCallback(user: User, path: String? , hash: String?) {
@@ -81,9 +82,19 @@ class Controller(private val model: Model, private val view: View) {
     }
   }
 
+  private fun newDocument() {
+    model.getUser(::handleError) {
+      user -> model.saveDocument(Document("Untitled", user.name, "#+TITLE: Untitled"), ::handleError) {
+        updateDocuments()
+      }
+    }
+  }
+
   private fun saveDocument() {
     if(current_doc != null) {
-      model.saveDocument(current_doc!!, ::handleError) { }
+      model.saveDocument(current_doc!!, ::handleError) {
+        updateDocuments()
+      }
     }
   }
 

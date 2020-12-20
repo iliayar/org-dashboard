@@ -20,6 +20,7 @@ open class View(private val template: Template) {
   private val files_list = qs(".files", side_menu)!!
   private val user_info = qs("header .user-info")!!
   private val save = qs(".save-btn")!!
+  private val new = qs(".new-btn")!!
 
   inner class LoginView() {
     val btn_login = qs("input[type='button'].login")!!
@@ -92,6 +93,9 @@ open class View(private val template: Template) {
   }
 
   inner class Binder {
+    fun new(handler: () -> Unit) {
+      new.addEventListener("click", { _ -> handler()})
+    }
     fun save(handler: () -> Unit) {
       save.addEventListener("click", { _ -> handler()})
     }

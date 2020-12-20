@@ -119,6 +119,13 @@ class RegexOrgParser(src: Source) : AbstractParser<Org>(src) {
                     paragraph = OrgTable(emptyList())
                 }
                 paragraph.add(line)
+            } else if(line is Keyword) {
+              section.add(paragraph)
+              section.add(line)
+              paragraph = Paragraph()
+              if(line.key == "TITLE") {
+                section.title = line.value
+              }
             } else if (line is MarkupText) {
                 if (!line.isEmpty()) {
                     paragraph.add(line)
