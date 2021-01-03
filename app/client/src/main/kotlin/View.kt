@@ -21,6 +21,7 @@ open class View(private val template: Template) {
   private val user_info = qs("header .user-info")!!
   private val save = qs(".save-btn")!!
   private val new = qs(".new-btn")!!
+  private val delete = qs(".delete-btn")!!
 
   inner class LoginView() {
     val btn_login = qs("input[type='button'].login")!!
@@ -98,6 +99,9 @@ open class View(private val template: Template) {
     }
     fun save(handler: () -> Unit) {
       save.addEventListener("click", { _ -> handler()})
+    }
+    fun delete(handler: () -> Unit) {
+      delete.addEventListener("click", { _ -> handler()})
     }
     fun toggleMenu(handler: () -> Unit) {
       menu_toggle.addEventListener("click", { _ -> handler() })

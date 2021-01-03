@@ -32,7 +32,7 @@ fun TagConsumer<*>.application() {
   header {
     div("container") {
       div("controls") {
-        i("btn fas fa-bars menu-toggle-btn")
+        i("fas fa-bars menu-toggle-btn")
         div("btn save-btn") {
           i("fas fa-save")
           +" Save"
@@ -40,6 +40,10 @@ fun TagConsumer<*>.application() {
         div("btn new-btn") {
           i("fas fa-plus")
           +" New"
+        }
+        div("btn delete-btn") {
+          i("fas fa-trash")
+          +" Delete"
         }
       }
       h1() { +"Org Dashboard" }

@@ -111,6 +111,22 @@ Test content
     }
   }
 
+  fun deleteDocument(doc: Document, error_cb: (Error) -> Unit, cb: () -> Unit) {
+    var docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
+    var new_docs: List<Document> = listOf()
+    if(docs != null) {
+      for(d in docs) {
+        if(d.name != doc.name) {
+          new_docs += d
+        }
+      }
+      localStorage["docs"] = Json.encodeToString(new_docs)
+    }
+    sendAndParseResult("/api/document", "DELETE", doc, {s -> s}, ::encodeDocument, error_cb) {
+      cb()
+    }
+  }
+
   private fun decodeUser(s: String): User = Json.decodeFromString<User>(s)
   private fun decodeDocuments(s: String): List<Document> = Json.decodeFromString<List<Document>>(s)
   private fun encodeUser(u: User): String = Json.encodeToString(u)

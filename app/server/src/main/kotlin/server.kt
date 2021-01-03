@@ -98,6 +98,11 @@ fun Application.main() {
         println(doc.content);
         call.respond(HttpStatusCode.OK);
       }
+      delete("/document") {
+        val doc = call.receive<Document>();
+        println("DELETE: \n" + doc.content);
+        call.respond(HttpStatusCode.OK);
+      }
     }
   }
 }
