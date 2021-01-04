@@ -1,0 +1,10 @@
+version: '3.3'
+
+services:
+  web:
+    build: ./app
+    command: gradle --no-daemon :server:run
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.remotedb
