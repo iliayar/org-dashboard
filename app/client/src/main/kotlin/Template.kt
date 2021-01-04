@@ -143,7 +143,7 @@ You can create table! \\
     return document.create.div {
       for(doc in docs) {
         div("document-entry") {
-          attributes["name"] = doc.name
+          attributes["name"] = doc.id!!.toString()
           +doc.name
         }
       }

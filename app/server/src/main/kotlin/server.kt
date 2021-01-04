@@ -14,10 +14,12 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 import io.ktor.serialization.*
 import io.ktor.features.*
-import java.security.MessageDigest
 
+import org.dashboard.*
+import org.dashboard.database.*
 
 fun Application.main() {
+  var db = DashboardDB()
   routing {
       get("/") {
         call.respondHtml {
@@ -60,55 +62,63 @@ fun Application.main() {
       json()
     }
     route("/api") {
-      // :FIXME: On this stage we fully trust client Later User will
-      // be fetched from session cookies or token
       post("/auth") {
         val auth = call.receive<UserAuth>();
-        // :TODO: Gettign real users
-        if(auth.name == "admin" && auth.password == sha256("admin")) {
-          call.respond(HttpStatusCode.OK, User(auth.name, true))
+        val userId: Int? = db.checkUser(auth.name, auth.password)
+        if(userId != null) {
+          call.respond(HttpStatusCode.OK, User(auth.name, token = db.authorize(userId)))
         } else {
           call.respond(HttpStatusCode(420, "Not authenticated"), Error("Invalid username of password"))
         }
       }
       post("/register") {
         val auth = call.receive<UserAuth>();
-        // :TODO: adding user
-        call.respond(HttpStatusCode.OK, User(auth.name, true));
+        val userId: Int? = db.addUser(auth.name, auth.password)
+        if(userId != null) {
+          call.respond(HttpStatusCode.OK, User(auth.name, token = db.authorize(userId)));
+        } else {
+          call.respond(HttpStatusCode(420, "Register failed"), Error("Username with such name already exists"))
+        }
       }
         get("/document/list") {
-          val user = User("admin", true)
-          // :TODO: Getting user's real documents
-          if(user.authenticated) {
-            call.respond(HttpStatusCode.OK, listOf(Document("test", user.name, "* Test Document"), Document("Another test", user.name, "* Another test Document")))
+          val token = call.parameters["token"]!!
+          val userId = db.getSession(token)
+          if(userId != null) {
+            call.respond(HttpStatusCode.OK, db.getDocuments(userId))
           } else {
             call.respond(HttpStatusCode(420, "Not authenticated"), Error("Not authenticated, cannot fetch documents"))
           }
         }
-        get("/user") {
-          // :TODO: Getting current user or Error in case not authenticated
-          call.respond(User("admin", false));
-        }
-        get("/document") {
-          // :TODO: Getting document content
-        }
       post("/document") {
-        // :TODO: Saving document
+        val token = call.parameters["token"]!!
         val doc = call.receive<Document>();
-        println(doc.content);
-        call.respond(HttpStatusCode.OK);
+        val userId = db.getSession(token)
+        if(doc.id == null) {
+          val docId = db.createDocument(Document(null, doc.name, userId!!, doc.content))
+          call.respond(HttpStatusCode.OK);
+        } else {
+          if(userId != db.getDocument(doc.id).user) {
+            call.respond(HttpStatusCode(420, "Not authorized"), Error("You are not authorized to edit this document"))
+          } else {
+            db.saveDocument(doc)
+            call.respond(HttpStatusCode.OK);
+          }
+        }
       }
       delete("/document") {
+        val token = call.parameters["token"]!!
         val doc = call.receive<Document>();
-        println("DELETE: \n" + doc.content);
-        call.respond(HttpStatusCode.OK);
+        val userId = db.getSession(token)
+        if(doc.id == null) {
+            call.respond(HttpStatusCode(404, "Not found"), Error("Document not found"))
+        } else {
+          if(db.getDocument(doc.id).user != userId) {
+            call.respond(HttpStatusCode(420, "Not authorized"), Error("You are not authorized to delete this document"))
+          }
+          db.deleteDocument(doc)
+          call.respond(HttpStatusCode.OK);
+        }
       }
     }
   }
-}
-
-fun sha256(text: String): String {
-  val md = MessageDigest.getInstance("SHA-256")
-  val hash = md.digest(text.toByteArray())
-  return hash.fold("") { str, it -> str + "%02x".format(it) }
 }

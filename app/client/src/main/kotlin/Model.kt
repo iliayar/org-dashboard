@@ -14,32 +14,12 @@ import orgmode.parser.StringSource
 import orgmode.OrgDocument
 
 class Model() {
-
-  fun getDoc(name: String): String {
-    return """
-* Test Doc
-Test content
-    """
-  }
-  fun getUser(error_cb: (Error) -> Unit, cb: (User) -> Unit) {
+  fun getUser(error_cb: (Error) -> Unit, cb: (User?) -> Unit) {
     val user: User? = localStorage["user"]?.let { Json.decodeFromString<User>(it) }
-    if(user != null) {
-      cb(user)
-      return
-    }
-    parseResult<User>("/api/user", "GET", ::decodeUser, error_cb) {
-      u: User ->
-        localStorage["user"] = Json.encodeToString(u)
-      cb(u)
-    }
+    cb(user)
   }
 
   fun authenticate(auth: UserAuth, error_cb: (Error) -> Unit, cb: (User) -> Unit) {
-    val user: User? = localStorage["user"]?.let { decodeUser(it) }
-    if(user != null && user.authenticated) {
-      cb(user)
-      return
-    }
     sendAndParseResult("/api/auth", "POST", auth, ::decodeUser, ::encodeUserAuth, error_cb) {
       u: User ->
         localStorage["user"] = Json.encodeToString(u)
@@ -56,15 +36,8 @@ Test content
   }
 
   fun getDocuments(error_cb: (Error) -> Unit, cb: (List<Document>) -> Unit) {
-    val docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
-    if(docs != null) {
-      cb(docs)
-      return
-    }
-    parseResult("/api/document/list", "GET", ::decodeDocuments, error_cb) {
-      docs: List<Document> ->
-        localStorage["docs"] = Json.encodeToString(docs)
-      cb(docs)
+    parseResult("/api/document/list?token=${getToken()}", "GET", ::decodeDocuments, error_cb) {
+      docs: List<Document> -> cb(docs)
     }
   }
 
@@ -72,12 +45,12 @@ Test content
     localStorage.removeItem("user")
   }
 
-  fun getDocument(name: String, error_cb: (Error) -> Unit, cb: (Document) -> Unit) {
+  fun getDocument(id: Int, error_cb: (Error) -> Unit, cb: (Document) -> Unit) {
     getDocuments(error_cb) {
       docs ->
         var found: Boolean = false
         for(doc in docs) {
-          if(doc.name == name) { // :FIXME: Search by id
+          if(doc.id == id) {
             found = true
             cb(doc)
           }
@@ -89,42 +62,21 @@ Test content
   }
 
   fun saveDocument(doc: Document, error_cb: (Error) -> Unit, cb: () -> Unit) {
-    var docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
-    if(docs != null) {
-      var found: Boolean = false
-      for(d in docs) {
-        if(d.name == doc.name) {
-          val org_doc: OrgDocument = RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument
-          d.content = doc.content
-          d.name = org_doc.title ?: "Untitled"
-          found = true
-          break
-        }
-      }
-      if(!found) {
-        docs += doc
-      }
-      localStorage["docs"] = Json.encodeToString(docs)
-    }
-    sendAndParseResult("/api/document", "POST", doc, {s -> s}, ::encodeDocument, error_cb) {
+    val org_doc: OrgDocument = RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument
+    doc.name = org_doc.title ?: "Untitled"
+    sendAndParseResult("/api/document?token=${getToken()}", "POST", doc, {s -> s}, ::encodeDocument, error_cb) {
       cb()
     }
   }
 
   fun deleteDocument(doc: Document, error_cb: (Error) -> Unit, cb: () -> Unit) {
-    var docs: List<Document>? = localStorage["docs"]?.let { decodeDocuments(it) }
-    var new_docs: List<Document> = listOf()
-    if(docs != null) {
-      for(d in docs) {
-        if(d.name != doc.name) {
-          new_docs += d
-        }
-      }
-      localStorage["docs"] = Json.encodeToString(new_docs)
-    }
-    sendAndParseResult("/api/document", "DELETE", doc, {s -> s}, ::encodeDocument, error_cb) {
+    sendAndParseResult("/api/document?token=${getToken()}", "DELETE", doc, {s -> s}, ::encodeDocument, error_cb) {
       cb()
     }
+  }
+
+  private fun getToken(): String {
+    return decodeUser(localStorage["user"]!!).token!!
   }
 
   private fun decodeUser(s: String): User = Json.decodeFromString<User>(s)

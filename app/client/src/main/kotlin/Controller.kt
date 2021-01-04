@@ -18,16 +18,15 @@ class Controller(private val model: Model, private val view: View) {
     view.bind.delete(::deleteDocument)
   }
 
-  fun setViewCallback(user: User, path: String? , hash: String?) {
-    if(!user.authenticated) {
+  fun setViewCallback(user: User?, path: String? , hash: String?) {
+    if(user == null) {
       view.render.logedOut()
       view.bind.login(::login)
       view.bind.register(::register)
     } else {
-      val doc = path?.split("/")?.elementAtOrElse(1, { _ -> "" }) ?: ""
       view.render.logedIn(user)
       updateDocuments()
-      updateDoc(doc)
+      view.render.overview()
       view.bind.logout(::logout)
       view.bind.orgEditorEdit(::orgEdit)
       view.bind.enableCalendar(view.render::enableCalendar)
@@ -37,14 +36,6 @@ class Controller(private val model: Model, private val view: View) {
 
   fun setView(path: String?, hash: String?) {
     model.getUser(::handleError) { user -> setViewCallback(user, path, hash) }
-  }
-
-  private fun updateDoc(name: String) {
-    if(name == "") {
-      view.render.overview()
-    } else {
-      openDocument(name)
-    }
   }
 
   private fun updateDocuments() {
@@ -62,32 +53,26 @@ class Controller(private val model: Model, private val view: View) {
   private fun login(username: String, password: String) {
     model.authenticate(UserAuth(username, sha256(password)), ::handleError) {
       user ->
-        if(user.authenticated) {
           setViewCallback(user, null, null)
-        }
     }
   }
   private fun register(username: String, password: String) {
     model.register(UserAuth(username, sha256(password)), ::handleError) {
       user ->
-        if(user.authenticated) {
           setViewCallback(user, null, null)
-        }
     }
   }
 
-  private fun openDocument(name: String) {
-    model.getDocument(name, ::handleError) {
+  private fun openDocument(id: Int) {
+    model.getDocument(id, ::handleError) {
       doc -> view.render.updateDocument(RegexOrgParser(StringSource(doc.content)).parse() as OrgDocument)
       current_doc = doc
     }
   }
 
   private fun newDocument() {
-    model.getUser(::handleError) {
-      user -> model.saveDocument(Document("Untitled", user.name, "#+TITLE: Untitled"), ::handleError) {
-        updateDocuments()
-      }
+    model.saveDocument(Document(null, "Untitled", null, "#+TITLE: Untitled"), ::handleError) {
+      updateDocuments()
     }
   }
 
@@ -109,7 +94,7 @@ class Controller(private val model: Model, private val view: View) {
 
   private fun logout() {
     model.logout()
-    setView(null, null)
+    setViewCallback(null, null, null)
   }
 
   private fun orgEdit(content: String) {

@@ -5,18 +5,17 @@ import kotlinx.serialization.*
 // :FIXME: Make separate class for Document content
 @Serializable
 data class Document(
+  val id: Int?,
   var name: String,
-  val user: String,
+  val user: Int?,
   var content: String,
-  val shared: Boolean = false
 ) {
 }
 
 @Serializable
 data class User(
   val name: String,
-  var authenticated: Boolean = false,
-  val documents: List<Document> = listOf()
+  val token: String? = null
 ) {
 }
 

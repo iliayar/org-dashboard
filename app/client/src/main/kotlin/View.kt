@@ -124,9 +124,9 @@ open class View(private val template: Template) {
     fun logout(handler: () -> Unit) {
       auth!!.btn_logout.addEventListener("click", { _ -> handler() })
     }
-    fun openDocument(handler: (String) -> Unit) {
+    fun openDocument(handler: (Int) -> Unit) {
       for(doc in docs!!.list) {
-        doc.addEventListener("click", {e -> handler((e.target as HTMLElement).attributes["name"]!!.value)})
+        doc.addEventListener("click", {e -> handler((e.target as HTMLElement).attributes["name"]!!.value.toInt())})
       }
     }
     fun orgEditorEdit(handler: (String) -> Unit) {
