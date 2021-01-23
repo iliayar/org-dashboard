@@ -1,0 +1,212 @@
+header {
+    background-color: var(--color8);
+    height: 45px;
+}
+
+header .container {
+    display: flex; 
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+header  h1 {
+    text-align: center;
+    color: var(--color1);
+    margin: 0px;
+    align-self: center;
+}
+
+header  i {
+    font-size: 20pt;
+    cursor: pointer;
+}
+
+body {
+    background-color: var(--background);
+    margin: 0px;
+}
+
+.app.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+    align-content: stretch;
+
+    position: fixed;
+    height: calc(100% - 45px);
+    width: 100%;
+
+    color: var(--foreground);
+}
+
+.content .document {
+    margin: 15px 1% 15px 5%;
+    overflow-y: scroll;
+    height: calc(100% - 45px);
+    flex-grow: 3;
+    width: 60%;
+}
+
+.side-menu {
+    display: flex;
+    width: 0px;
+    background-color: var(--color8);
+    flex-grow: 0;
+    transition: width 0.5s ease-in-out;
+    overflow-x: hidden;
+    white-space: nowrap;
+
+    border-right: solid 2px var(--color4);
+}
+
+.side-menu.active {
+    display: flex;
+    width: 20%;
+    flex-grow: 1;
+}
+
+.active + .content {
+    width: 80% !important;
+}
+
+.side-menu .files {
+    width: 90%;
+}
+.files .document-entry {
+    width: 100%;
+    padding: 3px;
+    margin: 5px;
+}
+.files .document-entry:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.app .content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    transition: width 0.5s ease-in-out;
+}
+
+.login-form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.login-form.container {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+}
+
+.login-form.line {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.login-form.line.submit {
+    justify-content: center;
+}
+
+.login-form.line label {
+    width: 40%
+}
+.login-form.line input {
+    width: 60%
+}
+.login-form.container input[type="button"] {
+    width: 30%
+}
+
+.tools {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 2;
+}
+
+.tool-hidden {
+    display: none;
+}
+
+.tools-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: center;
+    width: 100%;
+}
+
+.tool-btn {
+    flex-grow: 1;
+    border: 1px solid var(--foreground);
+}
+
+.tool-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.tools .editor {
+    overflow-y: scroll;
+    height: 80%;
+    margin: 10%;
+    white-space: pre;
+}
+.tools .calendar {
+    width: 100%;
+    overflow-y: scroll;
+    height: 80%;
+    margin: 10%;
+}
+
+.planning-scheduled {
+    background-color: var(--color3);
+    color: var(--background);
+}
+.btn {
+    margin-left: 15px;
+    padding: 5px;
+}
+.menu-toggle-btn {
+    padding: 5px;
+}
+.btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+
+.planning-deadline {
+    background-color: var(--color1);
+    color: var(--background);
+}
+.planning-closed {
+    background-color: var(--color2);
+    color: var(--background);
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--color4);
+  border-radius: 10px;
+}
